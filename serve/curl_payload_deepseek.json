@@ -1,0 +1,27 @@
+{
+  "state": [
+    {
+      "speaker": "Revenue accountant",
+      "text": "Contract FIN-204 is signed. Sales ops reports the controller server shipped with delivery receipt, and collectibility is probable. The server is a distinct performance obligation. The contract has a 60-day acceptance period plus a side letter allowing a 40% return if integration fails."
+    },
+    {
+      "speaker": "Sales operations analyst",
+      "text": "Delivery evidence shows the unit installed on-site. The side letter was signed after the main contract and is not in our standard template. The customer says acceptance is likely but has not signed the acceptance certificate."
+    },
+    {
+      "speaker": "External auditor liaison",
+      "text": "Policy: standard recognition requires signed contract, distinct obligation, probable collectibility, delivery complete, and no non-standard acceptance or side agreement. If any such exception exists, route to technical accounting consultation. Deferred revenue applies only when the obligation is unsatisfied and no exception exists. Audit documentation is only final support after routing."
+    }
+  ],
+  "questions": {
+    "decision": {
+      "criteria": {
+        "deferred_revenue": "Route to a deferred revenue schedule because the customer has not signed the acceptance certificate and the performance obligation is not yet satisfied.",
+        "standard_recognition": "Route to standard recognition because the contract is signed, the server is a distinct performance obligation, collectibility is probable, and delivery evidence exists.",
+        "technical_consultation": "Route to technical accounting consultation because the post-contract side letter and non-standard acceptance terms are exception flags under the policy."
+      },
+      "instructions": "Select the correct routing for Contract FIN-204 under the policy stated in the dialogue.",
+      "type": "choice"
+    }
+  }
+}

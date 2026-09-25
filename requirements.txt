@@ -1,0 +1,10 @@
+torch>=2.1
+transformers>=4.51
+peft>=0.14
+accelerate>=0.30
+safetensors
+fastapi
+uvicorn
+pydantic
+pyyaml
+sentencepiece

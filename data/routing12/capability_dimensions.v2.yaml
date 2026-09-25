@@ -1,0 +1,178 @@
+version: v2
+source: data/capability_dimension_v2.yaml
+prompt_language: en
+judgment_policy: >-
+  Judge capabilities required to complete the original task. Do not infer a
+  capability only from matching words, and do not count incidental mechanics
+  as core work.
+
+groups:
+  code:
+    label_en: Code
+    label_zh: 代码
+    definition_en: Understand, create, change, or operate software artifacts.
+    dimensions:
+      - id: Code_generation
+        label_zh: 代码生成
+        definition_en: Write or substantially modify source code or tests to implement specified behavior.
+        boundary_en: Use Debugging for defect diagnosis and Code_review when assessment, rather than implementation, is the main work.
+
+      - id: Debugging
+        label_zh: 调试排错
+        definition_en: Reproduce, diagnose, localize, and fix locally reproducible code bugs, exceptions, logic errors, or incorrect behavior in development environments.
+        boundary_en: Use Ops_execution when diagnosing a running service or production environment, Code_generation for new behavior, and Code_review for general assessment without a concrete failure.
+
+      - id: Code_review
+        label_zh: 代码审查
+        definition_en: Assess existing code or proposed changes for correctness, quality, maintainability, and risk.
+        boundary_en: Use Code_generation when implementing changes and Security_audit when the assessment is specifically threat-focused.
+
+      - id: SQL_and_database
+        label_zh: SQL 与数据库
+        definition_en: Design, query, modify, or reason about databases, schemas, indexes, migrations, and transactions.
+        boundary_en: Use Data_transformation for non-database tabular or file-based processing.
+
+      - id: Frontend_and_UI
+        label_zh: 前端与 UI
+        definition_en: Build or modify interactive interfaces, client behavior, layout, responsiveness, usability, or accessibility.
+        boundary_en: Static documents and presentations are File_IO or Content_writing rather than Frontend_and_UI.
+
+      - id: DevOps_and_config
+        label_zh: DevOps 与配置管理
+        definition_en: Create or modify configuration and infrastructure-as-code files, including Dockerfiles, CI/CD pipelines, k8s YAML, Terraform, and nginx configuration.
+        boundary_en: Use Ops_execution when the task deploys, operates, or diagnoses a running system; the defining output here is a configuration or infrastructure file.
+
+      - id: Shell_execution
+        label_zh: Shell 命令执行
+        definition_en: Execute shell commands as the substantive task, such as running a user-provided script, finding or inspecting files, or performing batch processing.
+        boundary_en: Use Ops_execution when the commands maintain or diagnose a running system; do not count routine incidental commands.
+
+      - id: File_IO
+        label_zh: 文件读写
+        definition_en: Read, create, update, convert, or organize local files when their content, path, or format is a substantive part of the task.
+        boundary_en: Routine delivery of a final answer file alone does not make File_IO a core capability; use Repo_scanning for repository discovery.
+
+      - id: Repo_scanning
+        label_zh: 仓库扫描
+        definition_en: Explore an existing repository to locate relevant files, symbols, dependencies, conventions, and change impact.
+        boundary_en: Use Web_search for external sources and File_IO for known local files that require no repository discovery.
+
+  agents:
+    label_en: Agents
+    label_zh: 智能体
+    definition_en: Plan and execute goal-directed work through tools, workflows, memory, search, or operational systems.
+    dimensions:
+      - id: Multi-step_planning
+        label_zh: 多步规划
+        definition_en: Decompose a goal into dependent steps, order them, track constraints, and revise the plan as information changes.
+        boundary_en: Use Workflow_execution for following a predefined process that requires little new planning.
+
+      - id: Tool_dispatch
+        label_zh: 工具调用与调度
+        definition_en: Select, invoke, and coordinate suitable tools or APIs using the current goal and intermediate results.
+        boundary_en: Use Shell_execution for shell-only work and Workflow_execution for a predetermined tool sequence.
+
+      - id: Workflow_execution
+        label_zh: 工作流执行
+        definition_en: Carry out a defined multi-stage process while tracking state, completion, retries, and handoffs.
+        boundary_en: Use Multi-step_planning when the sequence itself must be designed and Ops_execution when operating infrastructure is the subject.
+
+      - id: Web_search
+        label_zh: 网络搜索
+        definition_en: Find relevant information from external web sources by forming queries, navigating results, and selecting useful sources.
+        boundary_en: Use Repo_scanning for local code and Research_and_reports for synthesizing evidence into a report.
+
+      - id: Memory_execution
+        label_zh: 记忆读写
+        definition_en: Retrieve, update, and apply persistent task or user memory across steps, runs, conversations, or sessions.
+        boundary_en: Current-prompt context is not persistent memory; ordinary task files belong to File_IO.
+
+      - id: Ops_execution
+        label_zh: 运维执行
+        definition_en: Operate or diagnose running services and infrastructure, including deployment, restart, scaling, log inspection, monitoring, and live incident troubleshooting.
+        boundary_en: The defining output is a system state change or diagnostic conclusion. Use DevOps_and_config when the deliverable is a configuration or infrastructure file, Debugging for local code defects, and Shell_execution for non-operational command execution.
+
+  data:
+    label_en: Data
+    label_zh: 数据
+    definition_en: Extract, transform, classify, summarize, translate, or quantitatively reason over information.
+    dimensions:
+      - id: Data_extraction
+        label_zh: 数据抽取
+        definition_en: Locate and capture requested facts, fields, records, entities, or values from supplied sources.
+        boundary_en: Use Data_transformation for reshaping already extracted data and Repo_scanning for source-code discovery.
+
+      - id: Data_transformation
+        label_zh: 数据转换
+        definition_en: Clean, normalize, join, aggregate, reshape, calculate over, or convert data into a required representation.
+        boundary_en: Use Data_extraction when only locating values and SQL_and_database when database semantics are central.
+
+      - id: Classification
+        label_zh: 分类
+        definition_en: Assign supplied items to predefined labels, categories, intents, or routing destinations.
+        boundary_en: Count only classification required by the original task, not classification performed by this evaluator.
+
+      - id: Summarization
+        label_zh: 摘要总结
+        definition_en: Condense supplied content while preserving its important facts, arguments, decisions, and structure.
+        boundary_en: Use Research_and_reports when new research and evidence synthesis are required, and Data_extraction for isolated fields.
+
+      - id: Translation
+        label_zh: 翻译
+        definition_en: Translate human-language meaning while preserving intent, terminology, tone, and relevant formatting.
+        boundary_en: File or schema conversion is Data_transformation or File_IO, not Translation.
+
+      - id: Math
+        label_zh: 数学计算
+        definition_en: Apply nontrivial mathematical, statistical, logical, or quantitative reasoning to derive or verify a result.
+        boundary_en: Incidental arithmetic does not count; straightforward record processing belongs to Data_transformation.
+
+  writing_chat:
+    label_en: Writing and chat
+    label_zh: 写作与对话
+    definition_en: Produce, synthesize, or exchange natural-language content and domain-specific analysis.
+    dimensions:
+      - id: Content_writing
+        label_zh: 内容写作
+        definition_en: Create or substantially rewrite original audience-facing prose with suitable structure, clarity, tone, and style.
+        boundary_en: Use Research_and_reports for evidence-led analysis and Summarization when condensing supplied material is the main work.
+
+      - id: Research_and_reports
+        label_zh: 研究与报告撰写
+        definition_en: Analyze and synthesize evidence from multiple sources into a structured, defensible report, often with citations.
+        boundary_en: Use Web_search for source discovery alone and Summarization for condensation without broader analysis.
+
+      - id: Q_and_A_and_knowledge
+        label_zh: 问答与知识
+        definition_en: Answer a direct question using factual, conceptual, scientific, technical, or domain knowledge and reasoning.
+        boundary_en: Use Research_and_reports for open-ended evidence gathering and Conversation for social or open-ended dialogue.
+
+      - id: Conversation
+        label_zh: 日常对话
+        definition_en: Maintain relevant, coherent, and appropriately toned open-ended natural-language interaction across turns.
+        boundary_en: Use Customer_support for service resolution and Q_and_A_and_knowledge for a self-contained knowledge question.
+
+      - id: Customer_support
+        label_zh: 客户支持
+        definition_en: Resolve customer questions, incidents, complaints, or product issues using service context, policy, and support procedures.
+        boundary_en: Engineering diagnosis belongs to Debugging or Ops_execution, while general social interaction belongs to Conversation.
+
+      - id: Roleplay_and_fiction
+        label_zh: 角色扮演与虚构创作
+        definition_en: Create fictional narratives, characters, dialogue, settings, or sustained persona-based interactions.
+        boundary_en: Factual prose belongs to Content_writing, and a professional role alone does not imply roleplay.
+
+      - id: Finance_and_trading
+        label_zh: 金融与交易
+        definition_en: Apply finance, accounting, investment, market, portfolio, valuation, risk, or trading knowledge.
+        boundary_en: Domain-neutral quantitative work belongs to Math; a non-financial report belongs to Research_and_reports.
+
+      - id: Security_audit
+        label_zh: 安全审计
+        definition_en: Assess software, systems, configuration, or processes for vulnerabilities, threats, abuse paths, controls, or compliance gaps.
+        boundary_en: General engineering assessment belongs to Code_review and ordinary functional failures belong to Debugging.
+
+      - id: Other
+        label_zh: 其他
+        definition_en: Work that is explicitly outside all other defined dimensions.
+        boundary_en: Prefer the closest semantic dimension when uncertain; use Other only when none of the other 29 dimensions substantively fits.

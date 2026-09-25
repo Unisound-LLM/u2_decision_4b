@@ -1,0 +1,62 @@
+version: v1
+dimension_spec_version: v1
+prompt_language: en
+
+choice:
+  group:
+    question_id: choice__group
+    instructions: >-
+      Which capability group is most central to successfully completing this
+      task? Judge the work required, not merely words that appear in the
+      instruction.
+    candidate_description_template: "{definition_en}"
+
+  within_group:
+    question_id_template: "choice__group__{group_id}"
+    instructions_template: >-
+      Assume the task is being assessed within the {group_id} capability
+      group. Which capability is most central to successfully completing the
+      task? Judge the work required, not merely words that appear in the
+      instruction.
+    candidate_description_template: "{definition_en} Boundary: {boundary_en}"
+
+noul:
+  question_id_template: "noul__{dimension_id}"
+  instructions_template: |-
+    Does successfully completing this task substantively require {dimension_id}?
+
+    Definition: {definition_en}
+    Boundary: {boundary_en}
+
+    Answer true when the capability is required for a core requirement or an important execution step. Answer false when it is unnecessary or only incidental.
+  candidates:
+    - id: "false"
+      description_en: The capability is unnecessary or only incidental.
+    - id: "true"
+      description_en: The capability is required for a core requirement or an important execution step.
+
+score:
+  question_id_template: "score__{dimension_id}"
+  instructions_template: |-
+    How important is {dimension_id} for successfully completing this task?
+
+    Definition: {definition_en}
+    Boundary: {boundary_en}
+
+    Select the single level that best represents the capability's importance to the work required by the task.
+  levels:
+    - id: "0"
+      name_en: Not required
+      description_en: No substantive relation to completing the task.
+    - id: "1"
+      name_en: Marginal
+      description_en: May appear incidentally; removing it normally does not prevent completion.
+    - id: "2"
+      name_en: Supporting
+      description_en: Materially helps, but is not a main part of the work.
+    - id: "3"
+      name_en: Important
+      description_en: One of the main capabilities required to complete the task.
+    - id: "4"
+      name_en: Core
+      description_en: The task is largely defined by this capability and is unlikely to succeed without it.
